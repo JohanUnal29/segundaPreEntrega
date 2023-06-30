@@ -4,7 +4,7 @@ import { __dirname} from './utils.js';
 import { connectMongo} from './db.js';
 import viewsRouter from '../src/routes/views.router.js';
 import handlebars from 'express-handlebars';
-
+import cartsRouter from './routes/cart.router.js';
 
 const app = express();
 const port = 8080;
@@ -37,7 +37,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/test-chat', testSocketChatRouter);
 
 //Render products
+
 app.use("/", viewsRouter);
+app.use('/api/carts', cartsRouter);
 
 app.get('*', (req, res) => {
   return res.status(404).json({

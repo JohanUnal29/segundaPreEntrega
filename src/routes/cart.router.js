@@ -23,25 +23,51 @@ router.post("/", async (req, res) => {
 });
 
 // Adds a product to a cart
-router.post("/:cid/product/:pid", async (req, res) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
+router.post('/:cid/product/:pid', async (req, res) => {
 
-  const { quantity } = req.body;
+  const cartId = req.params.cid
 
-  const newProduct = await manager.addProduct(cartId, productId, quantity);
+  const productId = req.params.pid
+
+  const newProduct = await manager.addProduct(cartId, productId)
 
   if (!newProduct) {
-    return res
-      .status(404)
-      .send({ status: "Error", error: "Product could not be found" });
+
+    return res.status(404).send({ status: 'Error', error: 'Product could not be found' })
+
   }
+
   return res.send({
-    status: "OK",
-    message: "Product successfully added to the cart",
+
+    status: 'OK',
+
+    message: 'Product successfully added to the cart',
+
     payload: newProduct,
-  });
-});
+
+  })
+
+})
+
+// router.post("/:cid/product/:pid", async (req, res) => {
+//   const cartId = req.params.cid;
+//   const productId = req.params.pid;
+
+//   const { quantity } = req.body;
+
+//   const newProduct = await manager.addProduct(cartId, productId, quantity);
+
+//   if (!newProduct) {
+//     return res
+//       .status(404)
+//       .send({ status: "Error", error: "Product could not be found" });
+//   }
+//   return res.send({
+//     status: "OK",
+//     message: "Product successfully added to the cart",
+//     payload: newProduct,
+//   });
+// });
 
 // Adds multiple products to a cart
 router.post("/:cid", async (req, res) => {

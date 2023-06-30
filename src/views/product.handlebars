@@ -4,7 +4,12 @@
   <p>${{product.price}}</p>
   <p>Category: {{product.category}}</p>
   <p>{{product.description}}</p>
-  <a id="{{product._id}}" onclick="addToCart(this.id)"><button>Agregar al
-      Carrito</button></a>
+  <p>{{product._id}}</p>
+  <a
+              id="{{product._id}}"
+              name="addProductBtn"
+              onclick="addToCart(this.id)"
+              class="btn btn-primary"
+            >Add to cart</a>
 </div>
-<script src="/js/products.js"></script>
+<script src="js/products.js"></script>
