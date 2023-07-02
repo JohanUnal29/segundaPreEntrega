@@ -5,6 +5,9 @@ import { connectMongo} from './db.js';
 import viewsRouter from '../src/routes/views.router.js';
 import handlebars from 'express-handlebars';
 import cartsRouter from './routes/cart.router.js';
+import { loginRouter } from './routes/login.router.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 const app = express();
 const port = 8080;
@@ -26,6 +29,15 @@ app.set('view engine', 'handlebars');
 // app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(
+  session({
+    store: MongoStore.create({ mongoUrl: 'mongodb+srv://johanardilah:Bmth2018.@dasein.q4myj6u.mongodb.net/?retryWrites=true&w=majority', ttl: 86400 * 7 }),
+    secret: 'un-re-secreto',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
 // //Rutas: API REST CON JSON
 // app.use('/api/users', usersRouter);
 // app.use('/api/pets', petsRouter);
@@ -40,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/", viewsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/api/sessions', loginRouter);
 
 app.get('*', (req, res) => {
   return res.status(404).json({
