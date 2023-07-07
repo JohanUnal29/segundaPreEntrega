@@ -25,9 +25,6 @@ const schema = new Schema({
   admin: {
     type: Boolean,
   },
-  age: {
-    type: Number,
-  },
 });
 schema.plugin(monsoosePaginate);
 export const UserModel = model('users', schema);

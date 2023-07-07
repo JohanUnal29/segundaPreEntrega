@@ -7,7 +7,7 @@ const router = Router();
 const productManager = new ProductManager();
 const cartManager = new CartManager();
 
-router.get("/profile", async (req, res) => {
+router.get("/profile", checkUser, async (req, res) => {
   const options = {
     query: {},
     pagination: {
@@ -45,12 +45,13 @@ router.get("/profile", async (req, res) => {
   const nextLink = hasNextPage ? `${link}${nextPage}` : null;
   let rol = "";
 
-  if(req.session.admin){
+  if(req.session.user.admin){
     rol = "admin";
   }else{
     rol = "usuario";
   }
 
+  
   return res.render("home", {
     products,
     totalPages,
@@ -60,7 +61,7 @@ router.get("/profile", async (req, res) => {
     prevLink,
     nextLink,
     title: "Products",
-    msg: req.session.firstName,
+    msg: req.session.user.firstName,
     rol: rol,
   });
 });
@@ -90,18 +91,11 @@ router.get('/login', (req, res) => {
   res.render('login-form');
 });
 
-router.get('/register', (req, res) => {
+router.get('/register',(req, res) => {
   res.render('register-form');
 });
 
-// router.get('/profile', (req, res) => {
-//   const msg = req.session.firstName; // Obtén el valor de la sesión
-//   res.render('home', { msg });
-// });
-
-
-
-router.get('/solo-para-admin', (req, res) => {
+router.get('/solo-para-admin', checkAdmin,(req, res) => {
   res.send('ESTO SOLO LO PUEDE VER EL ADMIN');
 });
 

@@ -8,6 +8,9 @@ import cartsRouter from './routes/cart.router.js';
 import { loginRouter } from './routes/login.router.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import passport from 'passport';
+import { iniPassport } from './config/passport.config.js';
+import {sessionGitHubRouter} from './routes/sessionGitHub.router.js';
 
 const app = express();
 const port = 8080;
@@ -17,6 +20,7 @@ const httpServer = app.listen(port, () => {
 });
 
 connectMongo();
+
 // connectSocket(httpServer);
 
 app.use(express.json());
@@ -50,9 +54,17 @@ app.use(
 
 //Render products
 
+//TODO LO DE PASSPORT
+iniPassport();
+app.use(passport.initialize());
+app.use(passport.session());
+//FIN TODO LO DE PASSPORT
+
+
 app.use("/", viewsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/sessions', loginRouter);
+app.use('/api/sessionsGit', sessionGitHubRouter);
 
 app.get('*', (req, res) => {
   return res.status(404).json({

@@ -1,48 +1,31 @@
 import express from "express";
-import { UserModel } from "../DAO/models/users.model.js";
+import passport from 'passport';
 
 export const loginRouter = express.Router();
 
-loginRouter.post('/register', async (req, res) => {
-  const { firstName, lastName, age, email, password } = req.body;
-  if (!firstName || !lastName || !age || !email || !password) {
-    return res.status(400).render('error-page', { msg: 'faltan datos' });
+
+loginRouter.post('/register', passport.authenticate('register', { failureRedirect: '/error-reg' }), (req, res) => {
+  if (!req.user) {
+    return res.json({ error: 'something went wrong' });
   }
-  try {
-    await UserModel.create({ firstName, lastName, age, email, password, admin: false });
-    req.session.firstName = firstName;
-    req.session.email = email;
-    req.session.admin = false;
-    return res.redirect('/profile');
-  } catch (e) {
-    console.log(e);
-    return res.status(400).render('error-page', { msg: 'controla tu email y intenta mas tarde' });
-  }
+  req.session.user = { _id: req.user._id, email: req.user.email, firstName: req.user.firstName, lastName: req.user.lastName, admin: req.user.admin};
+  return res.redirect('/profile');
 });
 
-loginRouter.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).render('error-page', { msg: 'faltan datos' });
-  }
-  try {
-    const foundUser = await UserModel.findOne({ email });
-    if (foundUser && foundUser.password === password) {
-      req.session.firstName = foundUser.firstName;
-      req.session.email = foundUser.email;
-      req.session.admin = foundUser.admin;
-      console.log(req.body)
-      if (req.session.admin) {
-        return res.redirect('/solo-para-admin');
-      } else {
-        return res.redirect('/profile');
-      }
+loginRouter.get('/error-reg',(req,res) => {
+  return res.status(400).render('error-page', { msg: 'controla tu email y intenta mas tarde'});
+});
 
-    } else {
-      return res.status(400).render('error-page', { msg: 'email o pass incorrectos' });
-    }
-  } catch (e) {
-    console.log(e);
-    return res.status(500).render('error-page', { msg: 'error inesperado en servidor' });
+
+loginRouter.post('/login', passport.authenticate('login', { failureRedirect: '/faillogin' }), async (req, res) => {
+  if (!req.user) {
+    return res.json({ error: 'invalid credentials' });
   }
+  req.session.user = { _id: req.user._id, email: req.user.email, firstName: req.user.firstName, lastName: req.user.lastName, admin: req.user.admin };
+
+  return res.redirect('/profile');
+});
+
+loginRouter.get('/faillogin', async (req, res) => {
+  return res.status(400).render('error-page', { msg: 'email o pass incorrectos' });
 });
