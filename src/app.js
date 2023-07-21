@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from "mongoose";
 import path from 'path';
 import { __dirname} from './utils.js';
 import { connectMongo} from './db.js';
@@ -11,6 +12,7 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import { iniPassport } from './config/passport.config.js';
 import {sessionGitHubRouter} from './routes/sessionGitHub.router.js';
+import { UserModel } from './DAO/models/users.model.js';
 
 const app = express();
 const port = 8080;
@@ -60,11 +62,50 @@ app.use(passport.initialize());
 app.use(passport.session());
 //FIN TODO LO DE PASSPORT
 
+// const addCartToUser = async () => {
+//   try {
+//     const userId = "64ba1462b77b4203f2150a07";
+//     const cartId = "6497cdf848cb396f1df1a87a";
+
+//     // Convertir las cadenas de IDs a ObjectIDs
+//     // const objectIdUserId = new mongoose.Types.ObjectId(userId);
+//     // const objectIdCartId = new mongoose.Types.ObjectId(cartId);
+
+
+//     // Buscar el usuario por su ID
+//     let user = await UserModel.findOne({ _id: userId });
+
+//     if (!user) {
+//       console.log("Usuario no encontrado");
+//       return;
+//     }
+
+//     // Agregar el carrito al usuario
+//     // user.carts.push({ cart: cartId});
+//     // await user.save();
+    
+//     user = await UserModel.findOne({ _id: userId  }).populate('carts.cart');
+
+
+//     console.log(JSON.stringify(user, null, '\t'));
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// addCartToUser();
 
 app.use("/", viewsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/sessions', loginRouter);
 app.use('/api/sessionsGit', sessionGitHubRouter);
+app.use('/api/sessions/current', (req, res) => {
+  return res.status(200).json({
+    status: 'success',
+    msg: 'datos de la session',
+    payload: req.session.user || {},
+  });
+});
 
 app.get('*', (req, res) => {
   return res.status(404).json({

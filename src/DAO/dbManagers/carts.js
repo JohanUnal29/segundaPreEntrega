@@ -1,4 +1,5 @@
 import cartsModel from "../models/carts.js";
+import { UserModel } from "../models/users.model.js";
 
 export default class CartManager {
   constructor() { }
@@ -33,6 +34,36 @@ export default class CartManager {
     }
   };
 
+  addCartToUser = async () => {
+    try {
+      const userId = "4ba1462b77b4203f2150a07";
+      const cartId = "64b6264c445e8a901e5f9611";
+  
+      // Convertir las cadenas de IDs a ObjectIDs
+      const objectIdUserId = mongoose.Types.ObjectId(userId);
+      const objectIdCartId = mongoose.Types.ObjectId(cartId);
+  
+      // Buscar el usuario por su ID
+      let user = await UserModel.findOne({ _id: objectIdUserId });
+  
+      if (!user) {
+        console.log("Usuario no encontrado");
+        return;
+      }
+  
+      // Agregar el carrito al usuario
+      user.carts.push({ cart: objectIdCartId });
+      
+  
+      // Volver a buscar el usuario con el carrito poblado
+      // user = await UserModel.findOne({ _id: objectIdUserId }).populate('carts.cart');
+  
+      // console.log(JSON.stringify(user, null, '\t'));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   addProduct = async (cartId, productId) => {
     try {
       const productExist = await cartsModel.findOne({

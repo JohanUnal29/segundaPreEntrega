@@ -28,6 +28,7 @@ export function iniPassport() {
                         return done(null, false);
                     }
                     if (!isValidPassword(password, user.password)) {
+                        //considerar página de errores
                         console.log("Invalid Password");
                         return done(null, false);
                     }
@@ -49,9 +50,10 @@ export function iniPassport() {
             },
             async (req, username, password, done) => {
                 try {
-                    const { email, firstName, lastName, admin} = req.body;
+                    const { email, firstName, lastName, rol, age} = req.body;
                     const user = await UserModel.findOne({ email: username }).exec();
                     if (user) {
+                        //considerar si hacer una página de erro bien hecha
                         console.log("User already exists");
                         return done(null, false);
                     }
@@ -64,7 +66,8 @@ export function iniPassport() {
                         email,
                         firstName,
                         lastName,
-                        admin,
+                        rol,
+                        age,
                         password: createHash(password),
                     };
                     const userCreated = await UserModel.create(newUser);
@@ -143,7 +146,7 @@ export function iniPassport() {
 
                             lastName: 'nolast',
 
-                            admin: false,
+                            rol: "user",
 
                             password: 'nopass',
 

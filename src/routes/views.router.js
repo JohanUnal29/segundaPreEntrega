@@ -43,14 +43,9 @@ router.get("/profile", checkUser, async (req, res) => {
   const link = `/?limit=${options.pagination.limit}&page=`;
   const prevLink = hasPrevPage ? `${link}${prevPage}` : null;
   const nextLink = hasNextPage ? `${link}${nextPage}` : null;
-  let rol = "";
+  let rol = req.session.user.rol;
 
-  if(req.session.user.admin){
-    rol = "admin";
-  }else{
-    rol = "usuario";
-  }
-
+  console.log(rol);
   
   return res.render("home", {
     products,

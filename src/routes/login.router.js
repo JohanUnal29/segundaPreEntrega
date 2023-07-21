@@ -8,7 +8,7 @@ loginRouter.post('/register', passport.authenticate('register', { failureRedirec
   if (!req.user) {
     return res.json({ error: 'something went wrong' });
   }
-  req.session.user = { _id: req.user._id, email: req.user.email, firstName: req.user.firstName, lastName: req.user.lastName, admin: req.user.admin};
+  req.session.user = { _id: req.user._id.toString(), email: req.user.email, firstName: req.user.firstName, lastName: req.user.lastName, rol: req.user.rol};
   return res.redirect('/profile');
 });
 
@@ -21,7 +21,7 @@ loginRouter.post('/login', passport.authenticate('login', { failureRedirect: '/f
   if (!req.user) {
     return res.json({ error: 'invalid credentials' });
   }
-  req.session.user = { _id: req.user._id, email: req.user.email, firstName: req.user.firstName, lastName: req.user.lastName, admin: req.user.admin };
+  req.session.user = { _id: req.user._id.toString(), email: req.user.email, firstName: req.user.firstName, lastName: req.user.lastName, rol: req.user.rol };
 
   return res.redirect('/profile');
 });

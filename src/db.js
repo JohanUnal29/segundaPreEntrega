@@ -8,13 +8,14 @@ export async function connectMongo() {
     console.log("plug to mongo!");
 
     // const created = productsModel.create({
-    //   title: 'Aretes',
-    //   description: 'aretes de corazón',
-    //   code: '258',
-    //   price: 16000,
+    //   title: 'Joyeros',
+    //   description: 'Joyeros para cuidar tus accesorios',
+    //   code: '260',
+    //   price: 50000,
     //   status: true,
-    //   stock: 12,
-    //   category: 'Aretes',
+    //   stock: 10,
+    //   category: 'Joyeros',
+    //   subCategory: 'JoyerosPequeños',
     //   thumbnails: 'https://drive.google.com/uc?export=download&id=1wvtwNXn5gvqN3nch-2WnAbcrKn4NdWu4',
     // });
 
