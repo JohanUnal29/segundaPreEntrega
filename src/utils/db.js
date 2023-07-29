@@ -1,9 +1,10 @@
 import { connect } from "mongoose";
-import productsModel from "../src/DAO/models/products.js";
+import productsModel from "../DAO/models/products.js";
+import { entorno } from "../config.js";
 export async function connectMongo() {
   try {
     await connect(
-      "mongodb+srv://johanardilah:Bmth2018.@dasein.q4myj6u.mongodb.net/?retryWrites=true&w=majority"
+      entorno.MONGO_URL
     );
     console.log("plug to mongo!");
 

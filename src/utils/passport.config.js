@@ -4,7 +4,7 @@ import passport from 'passport';
 
 import local from 'passport-local';
 
-import { createHash, isValidPassword } from '../bcrypt.js';
+import { createHash, isValidPassword } from './bcrypt.js';
 
 import { UserModel } from '../DAO/models/users.model.js';
 

@@ -1,21 +1,24 @@
 import express from 'express';
 import mongoose from "mongoose";
 import path from 'path';
-import { __dirname} from './utils.js';
-import { connectMongo} from './db.js';
+import { __dirname} from './config.js';
+import { connectMongo} from './utils/db.js';
 import viewsRouter from '../src/routes/views.router.js';
 import handlebars from 'express-handlebars';
 import cartsRouter from './routes/cart.router.js';
 import { loginRouter } from './routes/login.router.js';
 import session from 'express-session';
+import FileStore from 'session-file-store';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
-import { iniPassport } from './config/passport.config.js';
+import { iniPassport } from './utils/passport.config.js';
 import {sessionGitHubRouter} from './routes/sessionGitHub.router.js';
 import { UserModel } from './DAO/models/users.model.js';
+import { entorno } from './config.js';
 
 const app = express();
-const port = 8080;
+const port = entorno.PORT;
+const fileStore = FileStore(session);
 
 const httpServer = app.listen(port, () => {
   console.log(`Example app listening on http://localhost:${port}`);
@@ -37,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   session({
-    store: MongoStore.create({ mongoUrl: 'mongodb+srv://johanardilah:Bmth2018.@dasein.q4myj6u.mongodb.net/?retryWrites=true&w=majority', ttl: 86400 * 7 }),
+    store: MongoStore.create({ mongoUrl: entorno.MONGO_URL, ttl: 86400 * 7 }),
     secret: 'un-re-secreto',
     resave: true,
     saveUninitialized: true,
